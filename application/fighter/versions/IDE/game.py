@@ -11,9 +11,6 @@ class IDE_GameLoop(GameLoop):
         "horizontal": "━",
     }
 
-    def __init__(self, combatant1, combatant2):
-        super().__init__(combatant1, combatant2)
-
     def match_card_gen(self, card_width: int = 120, padding_numb: int = 2):
         spacer = " "
         padding = padding_numb * spacer
