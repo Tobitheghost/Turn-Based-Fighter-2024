@@ -3,7 +3,7 @@ import time
 from settings import *
 from builders.button import Button
 from builders.menu import Menu
-from menus.main_menu.state import game_main_menu
+from menus.main_menu.buttons import start_btn, options_btn
 
 class Game:
     def __init__(self) -> None:
@@ -19,10 +19,13 @@ class Game:
         self.delta_time = time.time() - self.previous_time
         self.state_update = 1
         self.update_dict = {"start": True, "buttons":[]}
-        self.state = game_main_menu
-        self.state.game = self
-        print(game_main_menu.game)
+        self.main_menu = Menu(WIDTH, HEIGHT, "orange", "Main Menu",start_btn,options_btn)
+        self.options_menu = Menu(WIDTH, HEIGHT, "blue", "Options",start_btn,options_btn)
+        self.state = self.main_menu
         self.quit = False
+    
+    def update_state(self):
+        self.state.add_to_mouse_update(self.update_dict)
     
     def check_update(self):
         for item in self.update_dict["buttons"]:
@@ -71,9 +74,11 @@ class Game:
             self.running_frames += 1
         
     def update(self):
-        self.state.init_state(self.screen)
+        if self.update_dict["start"]:
+            self.update_state()
             
-        self.state.update()
+        self.state.update(self.screen)
+        self.check_update()
         self.get_fps()
         pygame.display.set_caption(str(self.fps))
         
@@ -89,7 +94,5 @@ class Game:
             
         self.end()
 
-
-if __name__ == "__main__":
-    game = Game()
-    game.game_loop()
+game = Game()
+game.game_loop()
